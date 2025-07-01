@@ -1,0 +1,37 @@
+\subsubsection*{Reducci\'on Subset Sum $\le_{p}$ 0-1 Knapsack}
+
+Esta reduccion es mas trivial. 
+
+Tenemos el dominio de \textbf{Subset Sum} ([Numeros], k) y queremos reducirlo 
+al dominio de \textbf{0-1 Knapsack} ([Valor], [Peso], Valor, Peso), donde la solucion 
+es un subconjunto de indices $I$ donde si tenemos la entrada
+\texttt{(valores pesos valorMinimo pesoMaximo)}
+
+\begin{align*}
+  \sum_{i \in I} \texttt{valores[i]} &\geq \texttt{valorMinimo} \\
+  \sum_{i \in I} \texttt{pesos[i]} &\le \texttt{pesoMaximo} 
+\end{align*}
+
+Para reducir \textbf{Subset Sum} a \textbf{0-1 Knapsack}, debemos unicamente 
+pasar repetir el dominio: 
+
+\begin{center}
+  \texttt{solveSubsetSum nums k} $\Rightarrow$ 
+  \texttt{solve01Knapsack nums nums k k}
+\end{center}
+
+Esto va a dar que  
+
+\begin{align*}
+  \sum_{i \in I} \texttt{nums[i]} &\geq \texttt{k} \\
+  \sum_{i \in I} \texttt{nums[i]} &\le \texttt{k} 
+\end{align*}
+
+Por lo tanto: 
+\begin{align*}
+  \sum_{i \in I} \texttt{nums[i]} &= \texttt{k} 
+\end{align*}
+
+Esto tiene orden de ejecucion $O(1)$, por lo tanto es una reduccion polinomial. 
+
+

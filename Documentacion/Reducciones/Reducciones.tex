@@ -1,0 +1,31 @@
+\setcounter{subsection}{3}
+\subsection{Reducci\'on \texttt{reduceAtoB}}
+ 
+Para obtener \texttt{reduceAtoB}, debemos encontrar un plan de reducciones 
+que reduce \textbf{3-SAT} al problema \textbf{B}. 
+En nuestra investigaci\'on logramos obtener el siguiente plan de reducciones:
+
+\[
+  \textbf{3-SAT} \le_{p}
+  \textnormal{Subset Sum} \le_{p}
+  \textnormal{Knapsack} \le_{p} 
+  \textbf{B}
+\]
+
+\input{Reducciones/3-SAT_SubsetSum.tex}
+\newpage
+\input{Reducciones/SubsetSum-Knapsack.tex}
+\newpage
+\input{Reducciones/Knapsack-B.tex}
+
+Con estas reducciones demostramos que 
+\begin{align*}
+    \textbf{3-SAT} \le_{p} \text{Subset Sum} \land
+    \text{Subset Sum} \le_{p} \text{0-1 Knapsack} 
+    &\Rightarrow \textbf{3-SAT} \le_{p} \text{0-1 Knapsack} \\
+    \textbf{3-SAT} \le_{p} \text{0-1 Knapsack} \land
+    \text{0-1 Knapsack} \le_{p} \textbf{B} 
+    &\Rightarrow \textbf{3-SAT} \le_{p} \textbf{B}
+\end{align*}
+
+

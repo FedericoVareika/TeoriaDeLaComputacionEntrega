@@ -1,5 +1,5 @@
 TEXDIR := Documentacion
-TEXFILES := $(TEXDIR)/*.tex
+TEXFILES := $(TEXDIR)/*.tex $(TEXDIR)/Reducciones/*.tex
 BIBFILES := $(TEXDIR)/*.bib
 TEXSRC := $(TEXDIR)/Solucion.tex
 PDFOUT := $(TEXDIR)/Solucion.pdf

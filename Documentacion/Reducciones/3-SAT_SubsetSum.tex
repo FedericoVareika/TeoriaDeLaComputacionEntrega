@@ -1,17 +1,3 @@
-\setcounter{subsection}{3}
-\subsection{Reducci\'on \texttt{reduceAtoB}}
- 
-Para obtener \texttt{reduceAtoB}, debemos encontrar un plan de reducciones 
-que reduce \textbf{3-SAT} al problema \textbf{B}. 
-En nuestra investigaci\'on logramos obtener el siguiente plan de reducciones:
-
-\[
-  \textbf{3-SAT} \le_{p}
-  \textnormal{Subset Sum} \le_{p}
-  \textnormal{Knapsack} \le_{p} 
-  \textbf{B}
-\]
-
 \subsubsection*{Reducci\'on 3-SAT $\le_{p}$ Subset Sum}
 
 Cabe aclarar que esta reducci\'on no fue ideada por nosotros, sino que tomamos 
@@ -121,9 +107,9 @@ evaluadas a \texttt{True} al menos una vez \ref{eq:kge1s}.
 Estas reglas se ven cumplidas en los digitos de $k$:
 
 \begin{numcases}{digitoK(i)=}
-  1 & si $i \in [0, n)$
+  1 & si $i \in [1, n]$
   \label{eq:k1s}\\
-  v & si $i \in [n, n+r), \quad v \geq 1$
+  v & si $i \in [n+1, n+r], \quad v \geq 1$
   \label{eq:kge1s}
 \end{numcases}
 
@@ -153,7 +139,7 @@ Por lo tanto, deberiamos poder comprobarlo con estas nuevas reglas:
 \end{table}
 
 \[
-  k = 11131 \Rightarrow k[i] = digitoK(i) \quad \forall i \in [0, n + r)
+  k = 11131 \Rightarrow k[i] = digitoK(i) \quad \forall i \in [1, n + r]
 \]
 
 Podemos ver como nos estamos acercando a \textbf{Subset Sum}: 
@@ -168,9 +154,9 @@ El ultimo paso tendria que ser "verificamos que esta suma es igual a un numero
 $k'$. Para esto, debemos modificar las reglas originales: 
 
 \begin{numcases}{digitoK'(i)=}
-  1 & si $i \in [0, n)$
+  1 & si $i \in [1, n]$
   \label{eq:k1s'}\\
-  3 & si $i \in [n, n+r)$
+  3 & si $i \in [n+1, n+r]$
   \label{eq:k3s}
 \end{numcases}
 
@@ -236,7 +222,7 @@ Ahora podemos elegir los nuevos numeros para rellenar el ultimo digito de $k$:
 Y ahora: 
 
 \[
-  k = 11133 \Rightarrow k[i] = digitoK'(i) \quad \forall i \in [0, n + r)
+    k = 11133 \Rightarrow k[i] = digitoK'(i) \quad \forall i \in [1, n + r]
 \]
 
 PPor lo tanto, ya podemos cambiar la tercer regla de \ref{itm:reglasSS} por:
@@ -246,7 +232,10 @@ PPor lo tanto, ya podemos cambiar la tercer regla de \ref{itm:reglasSS} por:
 \end{itemize}
 
 Con esto, la reduccion esta completa. 
-Se puede ver como crear el conjunto de numeros ($a_i, b_i$) es recorrer la lista 
+Se puede ver como crear el conjunto de numeros $a_i$ y $b_i$ es recorrer la lista 
 de clausulas por cada variable ($O(n*r)$), y crear el conjunto de numeros 
-($s_i, t_i$) es recorrer la lista de clausulas ($O(r)$), por lo tanto es 
+$s_i$ y $t_i$ es recorrer la lista de clausulas ($O(r)$), por lo tanto es 
 una reduccion polinomial.
+
+Formalmente, el dominio de \textbf{3-SAT} ([Variables], [Clausulas]) se reduce 
+a el dominio de \textbf{Subset Sum} ([Numeros], $k$)

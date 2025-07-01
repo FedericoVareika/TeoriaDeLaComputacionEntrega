@@ -1,0 +1,27 @@
+\subsubsection*{Reducci\'on 0-1 Knapsack $\le_{p}$ B }
+
+Esta reduccion es de nuevo sumamente trivial. 
+
+Dado el dominio de \textbf{0-1 Knapsack} ([Valor], [Peso], Valor, Peso) y 
+el dominio de \textbf{B} ([Proyecto], [Grupo], c, b, Beneficio, Costo), el unico 
+problema a resolver que hay es que se hace con los grupos. Esto se da ya que 
+se puede obtener el costo y beneficio de cada proyecto con las funciones 
+$c: Proyecto -> Costo$ y 
+$b: Proyecto -> Beneficio$.
+
+Se va a generar un grupo por proyecto, tal que: 
+
+\[
+  g_i = {p_i} \quad \forall i \in [1, n]
+\]
+
+Dado esto, podemos reducir el resto de los elementos: 
+
+\begin{align*}
+  &p_i = \texttt{"$pi$"} &\\
+  &c(p_i) = \texttt{pesos[i]} &\\
+  &b(p_i) = \texttt{valores[i]} &\quad \forall i \in [1, n] 
+\end{align*}
+
+El valor y el peso se reducen a el beneficio y el costo respectivamente.
+
