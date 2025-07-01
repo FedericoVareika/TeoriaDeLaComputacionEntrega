@@ -1,10 +1,24 @@
+
 \documentclass[12pt, a4paper]{article}
 
+\usepackage{amsmath}
+\usepackage{cases}
+
+\usepackage{hyperref}
+\usepackage[
+    backend=biber,
+    url=true
+]{biblatex}
+\addbibresource{Referencias.bib}
+
+\usepackage[table]{xcolor}
+\usepackage{caption}
 
 \title{
-{Trabajo Final}\\
-{\large Teoria de la Computacion}
+    {Trabajo Final}\\
+    {\large Teoria de la Computacion}
 }
+
 \author{Federico Vareika, Guillermo Golpe}
 \date{2 de Julio 2025}
 
@@ -15,6 +29,12 @@
 \newpage
 
 \section*{Ejercicio 1}
-Hola como estamos? 
+\setcounter{section}{1}
+
+\input{Reducciones}
+
+\newpage
+\printbibliography
 
 \end{document}
+

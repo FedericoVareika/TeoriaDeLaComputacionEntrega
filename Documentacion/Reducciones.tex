@@ -1,0 +1,252 @@
+\setcounter{subsection}{3}
+\subsection{Reducci\'on \texttt{reduceAtoB}}
+ 
+Para obtener \texttt{reduceAtoB}, debemos encontrar un plan de reducciones 
+que reduce \textbf{3-SAT} al problema \textbf{B}. 
+En nuestra investigaci\'on logramos obtener el siguiente plan de reducciones:
+
+\[
+  \textbf{3-SAT} \le_{p}
+  \textnormal{Subset Sum} \le_{p}
+  \textnormal{Knapsack} \le_{p} 
+  \textbf{B}
+\]
+
+\subsubsection*{Reducci\'on 3-SAT $\le_{p}$ Subset Sum}
+
+Cabe aclarar que esta reducci\'on no fue ideada por nosotros, sino que tomamos 
+como referencia la reducci\'on mostrada en \cite{pcmi2007lectureB07}.
+
+Para realizar esta reducci\'on tenemos que moldar el problema \textbf{3-SAT} para 
+que se pueda reducir de manera trivial a \textbf{Subset Sum}.
+
+Tomamos el problema \textbf{3-SAT} como un conjunto de variables $x_1, ..., x_n$
+y un conjunto de clausulas $c_1, ..., c_r$. 
+Para cada variable $x_i$, se puede decir que tenemos dos opciones, que esta se 
+evalue a \texttt{True} o que se evalue a \texttt{False}, llamaremos a estas 
+opciones como $a_i$ y $b_i$ respectivamente. 
+Si se toma la opcion $b_i$, entonces podemos concluir que cada clausula que 
+tenga a la variable $x_i$ negada se evaluar\'a a \texttt{True}. 
+
+Si ahora tomamos estas opciones como numeros decimales de manera que: 
+
+\[
+  a_i = b_i = 10^{n-i}
+\]
+
+Entonces podemos formar la siguiente tabla tomando $n=3$: 
+
+\begin{center}
+\begin{tabular}{ c|c c c }
+  & $x_1$ & $x_2$ & $x_3$ \\
+  \hline 
+  $a_1$ & 1 & 0 & 0 \\
+  $b_1$ & 1 & 0 & 0 \\
+  $a_2$ & 0 & 1 & 0 \\
+  $b_2$ & 0 & 1 & 0 \\
+  $a_3$ & 0 & 0 & 1 \\
+  $b_3$ & 0 & 0 & 1 \\
+\end{tabular} 
+\end{center}
+
+\newpage 
+  
+En \textbf{3-SAT} solo podemos tomar una opcion por variable, y debemos definir 
+todas las variables. Dado esto, si sumamos todas las opciones elegidas, y 
+llamamos esta suma $k$: 
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{ c|c c c }
+    & $x_1$ & $x_2$ & $x_3$ \\
+    \hline 
+    $a_1$ & 1 & 0 & 0 \\
+    \rowcolor{green!30}
+    $b_1$ & 1 & 0 & 0 \\
+    \rowcolor{green!30}
+    $a_2$ & 0 & 1 & 0 \\
+    $b_2$ & 0 & 1 & 0 \\
+    $a_3$ & 0 & 0 & 1 \\
+    \rowcolor{green!30}
+    $b_3$ & 0 & 0 & 1 \\
+    \hline
+    $k$ & 1 & 1 & 1 \\
+  \end{tabular} 
+  \caption*{Se eligen las opciones en verde como ejemplo.}
+\end{table}
+
+Teniendo esto y usando el hecho que si elegimos $a_i$ entonces cada clausula 
+que contenga $x_i$ no negada se va a evaluar a \texttt{True}, podemos extender esta 
+tabla. 
+Para el ejemplo anterior tomamos la siguiente expresion: 
+
+\[
+  \underbrace{(x_1 \lor \neg x_2 \lor x_3)}_{c_1} 
+  \land 
+  \underbrace{(\neg x_1 \lor \neg x_2 \lor \neg x_3)}_{c_2} 
+\]
+
+Y derivamos la tabla: 
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{ c|c c c | c c }
+    & $x_1$ & $x_2$ & $x_3$ & $c_1$ & $c_2$ \\
+    \hline 
+    $a_1$ & 1 & 0 & 0 & 1 & 0 \\
+    \rowcolor{green!30}
+    $b_1$ & 1 & 0 & 0 & 0 & 1 \\
+    \rowcolor{green!30}
+    $a_2$ & 0 & 1 & 0 & 0 & 0 \\
+    $b_2$ & 0 & 1 & 0 & 1 & 1 \\
+    $a_3$ & 0 & 0 & 1 & 1 & 0 \\
+    \rowcolor{green!30}
+    $b_3$ & 0 & 0 & 1 & 0 & 1 \\
+    \hline
+    $k$ & 1 & 1 & 1 & 0 & 3 \\
+  \end{tabular} 
+\end{table}
+
+Se puede ver en esta tabla como indicamos con un $1$ las clausulas que se 
+evaluan a \texttt{True} al elegir la opcion en esa fila, e indicamos con $0$ 
+el resto.  
+Tambien extendimos $k$ para incluir la suma de las opciones marcadas.
+
+\newpage
+
+Podemos saber que se cumple \textbf{3-SAT} con las opciones elegidas sii se 
+elige solo una opcion de cada variable \ref{eq:k1s} y todas las clausulas son
+evaluadas a \texttt{True} al menos una vez \ref{eq:kge1s}. 
+
+Estas reglas se ven cumplidas en los digitos de $k$:
+
+\begin{numcases}{digitoK(i)=}
+  1 & si $i \in [0, n)$
+  \label{eq:k1s}\\
+  v & si $i \in [n, n+r), \quad v \geq 1$
+  \label{eq:kge1s}
+\end{numcases}
+
+Para el ejemplo anterior, es claro que una solucion es 
+$x_1=\texttt{True}$, 
+$x_2=\texttt{False}$, 
+$x_2=\texttt{True}$.
+Por lo tanto, deberiamos poder comprobarlo con estas nuevas reglas: 
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{ c|c c c | c c }
+    & $x_1$ & $x_2$ & $x_3$ & $c_1$ & $c_2$ \\
+    \hline 
+    \rowcolor{green!30}
+    $a_1$ & 1 & 0 & 0 & 1 & 0 \\
+    $b_1$ & 1 & 0 & 0 & 0 & 1 \\
+    $a_2$ & 0 & 1 & 0 & 0 & 0 \\
+    \rowcolor{green!30}
+    $b_2$ & 0 & 1 & 0 & 1 & 1 \\
+    \rowcolor{green!30}
+    $a_3$ & 0 & 0 & 1 & 1 & 0 \\
+    $b_3$ & 0 & 0 & 1 & 0 & 1 \\
+    \hline
+    $k$ & 1 & 1 & 1 & 3 & 1 \\
+  \end{tabular} 
+\end{table}
+
+\[
+  k = 11131 \Rightarrow k[i] = digitoK(i) \quad \forall i \in [0, n + r)
+\]
+
+Podemos ver como nos estamos acercando a \textbf{Subset Sum}: 
+\begin{itemize}
+  \item Tenemos una entrada de numeros ($a_i$ y $b_i$).
+  \item Sumamos un subconjunto de estos numeros.
+  \item Verificamos que esta suma cumple ciertas reglas.
+\end{itemize}
+\label{itm:reglasSS}
+
+El ultimo paso tendria que ser "verificamos que esta suma es igual a un numero 
+$k'$. Para esto, debemos modificar las reglas originales: 
+
+\begin{numcases}{digitoK'(i)=}
+  1 & si $i \in [0, n)$
+  \label{eq:k1s'}\\
+  3 & si $i \in [n, n+r)$
+  \label{eq:k3s}
+\end{numcases}
+
+\newpage
+
+Y agregamos nuevos elementos al conjunto de numeros. Estos van a ser dos por 
+clausula, de tal manera que se podra 'rellenar' de cierta forma el digito de 
+esta clausula. Llamaremos a estos numeros $s_i$ y $t_i$.
+Podemos ver estos nuevos numeros en la siguiente tabla: 
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{ c|c c c | c c }
+    & $x_1$ & $x_2$ & $x_3$ & $c_1$ & $c_2$ \\
+    \hline 
+    \rowcolor{green!30}
+    $a_1$ & 1 & 0 & 0 & 1 & 0 \\
+    $b_1$ & 1 & 0 & 0 & 0 & 1 \\
+    $a_2$ & 0 & 1 & 0 & 0 & 0 \\
+    \rowcolor{green!30}
+    $b_2$ & 0 & 1 & 0 & 1 & 1 \\
+    \rowcolor{green!30}
+    $a_3$ & 0 & 0 & 1 & 1 & 0 \\
+    $b_3$ & 0 & 0 & 1 & 0 & 1 \\
+    \hline
+    $s_1$ & 0 & 0 & 0 & 1 & 0 \\
+    $t_1$ & 0 & 0 & 0 & 1 & 0 \\
+    $s_2$ & 0 & 0 & 0 & 0 & 1 \\
+    $t_2$ & 0 & 0 & 0 & 0 & 1 \\
+    \hline
+    $k$ & 1 & 1 & 1 & 3 & 3 \\
+  \end{tabular} 
+\end{table}
+
+Ahora podemos elegir los nuevos numeros para rellenar el ultimo digito de $k$:
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{ c|c c c | c c }
+    & $x_1$ & $x_2$ & $x_3$ & $c_1$ & $c_2$ \\
+    \hline 
+    \rowcolor{green!30}
+    $a_1$ & 1 & 0 & 0 & 1 & 0 \\
+    $b_1$ & 1 & 0 & 0 & 0 & 1 \\
+    $a_2$ & 0 & 1 & 0 & 0 & 0 \\
+    \rowcolor{green!30}
+    $b_2$ & 0 & 1 & 0 & 1 & 1 \\
+    \rowcolor{green!30}
+    $a_3$ & 0 & 0 & 1 & 1 & 0 \\
+    $b_3$ & 0 & 0 & 1 & 0 & 1 \\
+    \hline
+    $s_1$ & 0 & 0 & 0 & 1 & 0 \\
+    $t_1$ & 0 & 0 & 0 & 1 & 0 \\
+    \rowcolor{green!30}
+    $s_2$ & 0 & 0 & 0 & 0 & 1 \\
+    \rowcolor{green!30}      
+    $t_2$ & 0 & 0 & 0 & 0 & 1 \\
+    \hline
+    $k$ & 1 & 1 & 1 & 3 & 3 \\
+  \end{tabular} 
+\end{table}
+
+Y ahora: 
+
+\[
+  k = 11133 \Rightarrow k[i] = digitoK'(i) \quad \forall i \in [0, n + r)
+\]
+
+PPor lo tanto, ya podemos cambiar la tercer regla de \ref{itm:reglasSS} por:
+\begin{itemize}
+  \item Verificamos que la suma es igual a 
+    $\underbrace{1...1}_{n}\underbrace{3...3}_{r}$
+\end{itemize}
+
+Con esto, la reduccion esta completa. 
+Se puede ver como crear el conjunto de numeros ($a_i, b_i$) es recorrer la lista 
+de clausulas por cada variable ($O(n*r)$), y crear el conjunto de numeros 
+($s_i, t_i$) es recorrer la lista de clausulas ($O(r)$), por lo tanto es 
+una reduccion polinomial.

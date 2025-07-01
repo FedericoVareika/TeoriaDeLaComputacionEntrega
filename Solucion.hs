@@ -74,11 +74,16 @@ verifyGroupB gs ps =
   let firstGroup = groups !! 1 in
   all (firstGroup ==) groups
 
+groupIsSatisfied :: SolB -> G -> Bool
+groupIsSatisfied ps g = 
+    let projectNames = map (\(name, _, _) -> name) ps in 
+    all (`elem` projectNames) g 
+
 verifyB :: (DomB, SolB) -> Bool
 verifyB ((ps, gs, cost, benefit), sol) = 
   verifyCostB cost sol &&
   verifyBenefitsB benefit sol &&
-  verifyGroupB gs sol
+  all (groupIsSatisfied sol) gs 
 
 -------------------------------------
 
@@ -101,8 +106,8 @@ getVars ((t1, t2, t3):ts) =
 getPossibleSolutionsA :: [Var] -> [SolA] 
 getPossibleSolutionsA [] = []
 getPossibleSolutionsA (v:vs) = 
-  let psSolutions = getPossibleSolutionsA vs in 
-  map ((v, False):) psSolutions ++ map ((v, True):) psSolutions
+  let vsSolutions = getPossibleSolutionsA vs in 
+  map ((v, False):) vsSolutions ++ map ((v, True):) vsSolutions
   
 solveA :: DomA -> SolA
 solveA dom =
@@ -114,7 +119,18 @@ solveA dom =
 
 ----------------- B -----------------
 
+getPossibleSolutionsB :: [P] -> [SolB]
+getPossibleSolutionsB [] = [] 
+getPossibleSolutionsB (p:ps) = 
+  let psSolutions = getPossibleSolutionsB ps in 
+  map (p:) psSolutions ++ psSolutions
+    
 solveB :: DomB -> SolB
-solveB = undefined
+solveB dom@(ps, gs, cost, benefit) = 
+  let possibleSolutions = getPossibleSolutionsB ps in 
+  let verifyableSolutions = map (dom,) possibleSolutions in
+  case find verifyB verifyableSolutions of 
+    Just (_, sol) -> sol 
+    Nothing -> []
 
 -------------------------------------
