@@ -22,7 +22,7 @@ class ImpLexer(RegexLexer):
                  Operator.Word,
                  Whitespace,
                  Name.Variable)),
-            (r'([\w:]+?)', Name.Variable),
+            (r'([\w:\']+?)', Name.Variable),
             (r'\b\d+\b', Number),
             (r'"[^"]*"', String),
             (r'//.*?$', Comment.Singleline),

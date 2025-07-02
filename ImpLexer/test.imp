@@ -1,0 +1,16 @@
+NOT(value) = {
+  case value [
+    False -> [], {res := True []},
+    True -> [], {res := False []}
+  ]
+}
+
+PAR(n) = {
+  res := True [];
+  while n is [
+    S -> [n'], {
+      value, n := res, n';
+      NOT(value);
+    }
+  ]
+}
