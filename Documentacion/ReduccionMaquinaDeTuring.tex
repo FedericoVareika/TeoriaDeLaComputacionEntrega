@@ -1,3 +1,226 @@
 \subsection{Codificaci\'on de la Reducci\'on en M\'aquinas de Turing}
 
+Definimos el alfabeto: 
+
+\begin{align*}
+\Sigma = \{&\text{L}, \text{NL}, \text{I}, \text{A}, \text{O}, \\
+& \text{P}, \text{C}, \text{B}, \text{G}
+\} 
+\end{align*}
+
+\subsubsection*{Entrada de A} 
+
+Podemos representar la siguiente entrada de A: 
+
+\[
+(\lnot l_1 \lor l_2 \lor l_3) \land (l_1 \lor \lnot l_4 \lor l_3)
+\]
+
+\begin{center}
+\begin{tikzpicture}[every node/.style={block},
+        block/.style={minimum height=1.75em,outer sep=0pt,draw,rectangle,node distance=0pt}]
+    % Define the array of symbols
+  \def\symbols{
+      NL, I, O, L, I, I, O, L, I, I, I,
+      A, 
+      L, I, O, NL, I, I, I, I, O, L, I, I, I}
+  \newcount\last
+  \last=0
+
+  % Initialize: store node names in \lastnode
+  \newcommand{\lastnode}{}
+  \foreach \sym [count=\i] in \symbols {
+  \global\last=\i
+
+  % Choose style conditionally
+  \def\nodestyle{block}
+  \ifx\sym O
+    \def\nodestyle{fill=gray!20}
+  \fi
+  \ifx\sym A
+    \def\nodestyle{fill=gray!60}
+  \fi
+
+  \ifnum\i=1
+    \node[\nodestyle] (node\i) {\sym};
+  \else
+    \node[\nodestyle] (node\i) [right=of node\the\numexpr\i-1\relax] {\sym};
+  \fi
+}
+
+  \node (Start) [left=of node1] {$\#$};
+  \node (End) [right=of node\the\last] {$\#$};
+
+  % Optional drawing between specific nodes
+  \draw (Start.north west) -- ++(-1cm,0)
+        (Start.south west) -- ++(-1cm,0)
+        (End.north east) -- ++(1cm,0)
+        (End.south east) -- ++(1cm,0);
+
+  \node (Cursor) [above = 0cm of Start, draw=none] {$\lor$};
+
+\end{tikzpicture}
+\end{center}
+
+Notamos que el literal \qq{NL} representa el negado de ese literal. Tambien notamos 
+que los \qq{O} reprenentan el \qq{$\lor$} y las \qq{A} representan el \qq{$\land$}
+
+
+\newpage
+\subsubsection*{Entrada de B} 
+
+Si tenemos la siguiente entrada de B (ejemplo aislado de la entrada de A): 
+
+\begin{align*}
+  P &= \{p_1, p_2, p_3\} \\
+  c(i) &= c_i, \quad \forall i \in [1, 3] \\
+  b(i) &= b_i, \quad \forall i \in [1, 3]  \\
+  G &= \{\{p_1, p_2\}, \{p_2, p_3\}\} 
+\end{align*}
+
+Proyectos:
+\begin{center}
+\begin{tikzpicture}[every node/.style={block},
+        block/.style={minimum height=1.75em,outer sep=0pt,draw,rectangle,node distance=0pt}]
+    % Define the array of symbols
+  \def\symbols{P, $n_1$, C, $c_1$, B, $b_1$, $\dots$, P, $n_3$, C, $c_3$, B, $b_3$ }
+  \newcount\last
+  \last=0
+
+  % Initialize: store node names in \lastnode
+  \newcommand{\lastnode}{}
+  \foreach \sym [count=\i] in \symbols {
+  \global\last=\i
+
+  % Choose style conditionally
+  \def\nodestyle{block}
+  \ifx\sym O
+    \def\nodestyle{fill=gray!20}
+  \fi
+  \ifx\sym A
+    \def\nodestyle{fill=gray!60}
+  \fi
+
+  \ifnum\i=1
+    \node[\nodestyle] (node\i) {\sym};
+  \else
+    \node[\nodestyle] (node\i) [right=of node\the\numexpr\i-1\relax] {\sym};
+  \fi
+}
+
+  \node (Start) [left=of node1] {$\#$};
+  \node (End) [right=of node\the\last] {$\#$};
+  \node (elipsis) [right=of End, draw=none] {$\dots$};
+
+  % Optional drawing between specific nodes
+  \draw (Start.north west) -- ++(-1cm,0)
+        (Start.south west) -- ++(-1cm,0)
+        (End.north east) -- ++(1cm,0)
+        (End.south east) -- ++(1cm,0);
+
+  \node (Cursor) [above = 0cm of Start, draw=none] {$\lor$};
+
+\end{tikzpicture}
+\end{center}
+
+Tomamos en cuenta que todos los $x_i$ son numeros representados en unario por 
+una cadena de \qq{I} (igual que como hicimos con la entrada de A.
+
+Seguido por grupos:
+
+\begin{center}
+\begin{tikzpicture}[every node/.style={block},
+        block/.style={minimum height=1.75em,outer sep=0pt,draw,rectangle,node distance=0pt}]
+    % Define the array of symbols
+  \def\symbols{G, P, $n_1$, P, $n_2$, G, P, $n_2$, P, $n_3$}
+  \newcount\last
+  \last=0
+
+  % Initialize: store node names in \lastnode
+  \newcommand{\lastnode}{}
+  \foreach \sym [count=\i] in \symbols {
+    \global\last=\i
+
+    % Choose style conditionally
+    \def\nodestyle{block}
+    \ifx\sym O
+      \def\nodestyle{fill=gray!20}
+    \fi
+    \ifx\sym A
+      \def\nodestyle{fill=gray!60}
+    \fi
+
+    \ifnum\i=1
+      \node[\nodestyle] (node\i) {\sym};
+    \else
+      \node[\nodestyle] (node\i) [right=of node\the\numexpr\i-1\relax] {\sym};
+    \fi
+  }
+
+  \node (Start) [left=of node1] {$\#$};
+  \node (End) [right=of node\the\last] {$\#$};
+  \node (elipsisStart) [left=of Start, draw=none] {$\dots$};
+
+  % Optional drawing between specific nodes
+  \draw (Start.north west) -- ++(-1cm,0)
+        (Start.south west) -- ++(-1cm,0)
+        (End.north east) -- ++(1cm,0)
+        (End.south east) -- ++(1cm,0);
+
+\end{tikzpicture}
+\end{center}
+
+Tomando como base el ejercicio 1.4, esta máquina de Turing constará de dos 
+procesos generales. El primero es aplicar las reducciones desarrolladas 
+previamente para pasar de la entrada de A a la entrada de B especificada. 
+Una vez realizado esto, el siguiente paso es resolver el problema de los
+proyectos, que tendrá como salida los proyectos adecuados, se vería de la
+siguiente forma (ejemplo aislado de las entradas previas):
+
+\[
+  S = \{p_3, p_5\}
+\]
+
+\begin{center}
+\begin{tikzpicture}[every node/.style={block},
+        block/.style={minimum height=1.75em,outer sep=0pt,draw,rectangle,node distance=0pt}]
+    % Define the array of symbols
+  \def\symbols{P, $n_3$, P, $n_5$}
+  \newcount\last
+  \last=0
+
+  % Initialize: store node names in \lastnode
+  \newcommand{\lastnode}{}
+  \foreach \sym [count=\i] in \symbols {
+    \global\last=\i
+
+    % Choose style conditionally
+    \def\nodestyle{block}
+    \ifx\sym O
+      \def\nodestyle{fill=gray!20}
+    \fi
+    \ifx\sym A
+      \def\nodestyle{fill=gray!60}
+    \fi
+
+    \ifnum\i=1
+      \node[\nodestyle] (node\i) {\sym};
+    \else
+      \node[\nodestyle] (node\i) [right=of node\the\numexpr\i-1\relax] {\sym};
+    \fi
+  }
+
+  \node (Start) [left=of node1] {$\#$};
+  \node (End) [right=of node\the\last] {$\#$};
+
+  % Optional drawing between specific nodes
+  \draw (Start.north west) -- ++(-1cm,0)
+        (Start.south west) -- ++(-1cm,0)
+        (End.north east) -- ++(1cm,0)
+        (End.south east) -- ++(1cm,0);
+
+  \node (Cursor) [above = 0cm of Start, draw=none] {$\lor$};
+
+\end{tikzpicture}
+\end{center}
 
