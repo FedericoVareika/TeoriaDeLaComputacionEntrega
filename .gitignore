@@ -7,3 +7,6 @@
 */*.bcf
 */*.blg
 */*.out
+pygments*
+*/_minted*
+*/__pycache__

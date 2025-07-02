@@ -9,7 +9,7 @@ PDFOUT := $(TEXDIR)/Solucion.pdf
 all: $(PDFOUT)
 
 $(PDFOUT): $(TEXFILES) $(BIBFILES)
-	latexmk -pdf -output-directory=$(TEXDIR) $(TEXSRC)
+	latexmk -pdf -shell-escape -output-directory=$(TEXDIR) $(TEXSRC)
 
 clean:
-	latexmk -C -output-directory=$(TEXDIR)
+	latexmk -C -output-directory=$(TEXDIR) $(TEXSRC)

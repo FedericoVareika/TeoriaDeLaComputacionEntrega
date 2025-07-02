@@ -134,3 +134,11 @@ solveB dom@(ps, gs, cost, benefit) =
     Nothing -> []
 
 -------------------------------------
+
+verify3SatTR :: DomA -> SolA -> Bool -> Bool
+verify3SatTR [] sol acc = acc
+verify3SatTR (c@(t1, t2, t3):cs) sol acc = 
+  let terms = [t1, t2, t3] in
+  let verifiedClause = foldr (\t -> (verifyTerm t sol ||)) False terms in
+  verify3SatTR cs sol (acc && verifiedClause)
+

@@ -1,0 +1,101 @@
+\subsection{Verificador de 3-SAT en Imp}
+
+Para programar en Imp el verificador de SAT, es buena idea primero programarlo 
+en Haskell con el uso de \emph{tail recursion}.
+Para esto, usamos los tipos definidos para el ejercicio 1. 
+
+\begin{minted}{haskell}
+verifyTerm :: Term -> SolA -> Bool
+verifyTerm (var, modifyer) sol = 
+  let maybeVal = lookup var sol in
+  case maybeVal of 
+    Just val -> val == modifyer
+
+verify3SatTR :: DomA -> SolA -> Bool -> Bool
+verify3SatTR [] sol acc = acc
+verify3SatTR (c@(t1, t2, t3):cs) sol acc = 
+  let terms = [t1, t2, t3] in
+  let verifiedClause = foldr (\t -> (verifyTerm t sol ||)) False terms in
+  verify3SatTR cs sol (acc && verifiedClause)
+
+\end{minted}
+
+\newpage
+
+Traducido a Imp: 
+
+\begin{minted}[fontsize=\small]{imp}
+VERIFY_SAT(clausulas, validacion) = {
+  local acc {
+    acc := True [];
+    while clausulas is [
+      : -> [c, cs], {
+        case c of [
+          Phi -> [t1, t2, t3], {
+            local clauseVeridity {
+              clauseVeridity := False [];
+              VERIFY_TERM(t1, validacion);  
+              OR(res, clauseVeridity);
+              clauseVeridity := res;
+              VERIFY_TERM(t2, validacion);  
+              OR(res, clauseVeridity);
+              clauseVeridity := res;
+              VERIFY_TERM(t3, validacion);  
+              OR(res, clauseVeridity);
+              clauseVeridity := res;
+
+              AND(acc, clauseVeridity);
+              acc := res;
+            }
+          }
+        ];
+        clausulas := cs
+      }
+    ];
+    res := acc;
+  }
+}
+
+\end{minted}
+
+\newpage
+
+\begin{minted}[fontsize=\small]{imp}
+
+VERIFY_TERM(t, validacion) = {
+  local result {
+    case t of [
+      Term -> [x, b], {
+        lookup(validacion, x) on result;
+        case b of {
+          False -> [], { NOT(res); result := res; }
+        }
+      }
+    ];
+    res := result;
+  }
+}
+
+OR(a, b) = {
+  case a of [
+    True -> [], {res := a},
+    False -> [], {res := b},
+  ]
+}
+
+AND(a, b) = {
+  case a of [
+    True -> [], {res := b},
+    False -> [], {res := a},
+  ]
+}
+
+NOT(a) = {
+  case a of [
+    True -> [], {res := False []},
+    False -> [], {res := True []},
+  ]
+}
+
+\end{minted}
+
