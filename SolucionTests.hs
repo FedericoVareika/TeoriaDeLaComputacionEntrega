@@ -1,3 +1,5 @@
+{- HLINT ignore "Use camelCase" -}
+
 module SolucionTests where 
 
 import Solucion
@@ -41,7 +43,7 @@ test_verifyA_false = verifyA (domA1, solA2) -- False
 ps :: [P]
 ps = [("p1",2,5), ("p2",3,4)]
 gs :: [G]
-gs = [["p1","p2"]]
+gs = [["p1","p2"], ["p3"]]
 domB, domB_lowCost :: DomB
 domB = (ps, gs, 5, 9)             -- costo max 5, ben mín 9
 domB_lowCost = (ps, gs, 4, 9)   -- costo max 4 (insuficiente)
@@ -60,12 +62,6 @@ test_verifyCostB_false = verifyCostB 4 solB_ok -- False
 test_verifyBenefitsB_true = verifyBenefitsB 9 solB_ok  -- True
 -- debería devolver False (5+4 < 10)
 test_verifyBenefitsB_false = verifyBenefitsB 10 solB_ok -- False
-
--- Tests para getGroupIndex
--- "p1" y "p2" están en el grupo 0
-test_getGroupIndex_found = getGroupIndex gs "p2" 0  -- 0
--- nombre no existe, devuelve -1
-test_getGroupIndex_notfound = getGroupIndex gs "x" 0 -- -1
 
 -- Tests para groupIsSatisfied
 test_groupIsSatisfied_true = groupIsSatisfied solB_ok ["p1","p2"]  -- True
@@ -106,8 +102,6 @@ tests_to_verify_b = [
     (test_verifyCostB_false, False),
     (test_verifyBenefitsB_true, True),
     (test_verifyBenefitsB_false, False),
-    (test_getGroupIndex_found == 0, True),
-    (test_getGroupIndex_notfound == -1, True),
     (test_groupIsSatisfied_true, True),
     (test_groupIsSatisfied_false, False),
     (test_verifyB_true, True),

@@ -4,6 +4,7 @@
 module Solucion where 
 
 import Data.List
+import GHC.RTS.Flags (RTSFlags(concurrentFlags))
 
 --  1.1 --
 
@@ -53,6 +54,16 @@ verifyPhi (t1, t2, t3) s =
 verifyA :: (DomA, SolA) -> Bool
 verifyA (dom, sol) = foldr (\phi -> (&&) $ verifyPhi phi sol) True dom
 
+{-
+ - verifyA corre verifyPhi para todo elemento del dominio. 
+   - verifyPhi corre verifyTerm para cada termino en si (3) 
+     - verifyTerm busca la valuacion en la solucion dada para su variable 
+     - Su orden es O(n)
+   - Su orden es O(n)
+ - Su orden es O(n^2) --> verifyA es polinomial
+ -
+ - -}
+
 ----------------- B -----------------
 
 verifyCostB :: Cost -> SolB -> Bool
@@ -63,28 +74,34 @@ verifyBenefitsB :: Benefit -> SolB -> Bool
 verifyBenefitsB b ps = let benefits = map (\(_, _, b) -> b) ps in
   sum benefits >= b
 
-getGroupIndex :: [G] -> Name -> Int -> Int
-getGroupIndex [] name acc = -1
-getGroupIndex (g:gs) name acc 
-  | elem name g = acc
-  | otherwise = getGroupIndex gs name (acc + 1)
-
-verifyGroupB :: [G] -> SolB -> Bool
-verifyGroupB gs ps = 
-  let groups = map (\(name, _, _) -> getGroupIndex gs name 0) ps in
-  let firstGroup = groups !! 1 in
-  all (firstGroup ==) groups
-
 groupIsSatisfied :: SolB -> G -> Bool
 groupIsSatisfied ps g = 
     let projectNames = map (\(name, _, _) -> name) ps in 
     all (`elem` projectNames) g 
 
+getSolutionGroups :: SolB -> [G] -> [G]
+getSolutionGroups ps gs =
+  let projectNames = map (\(name, _, _) -> name) ps in 
+  filter (\g -> any (`elem` g) projectNames) gs
+
 verifyB :: (DomB, SolB) -> Bool
 verifyB ((ps, gs, cost, benefit), sol) = 
   verifyCostB cost sol &&
   verifyBenefitsB benefit sol &&
-  all (groupIsSatisfied sol) gs 
+  all (groupIsSatisfied sol) (getSolutionGroups sol gs) 
+
+{-
+ - verifyB: corre
+   - verifyCostB: suma todos los costos de su solucion (O(n))
+   - verifyBenefitsB: suma todos los beneficios de su solucion (O(n))
+   - getSolutionGroups: filtra todos los grupos por los que tienen proyectos en
+     la solucion O(n^2)
+   - groupIsSatisfied para todos los grupos filtrados: corre 
+     - que todos los proyectos del grupo esten en la solucion (O(n^2))
+   - O(n^3)
+ - O(n^3) --> verifyB es polinomial
+ -
+ - -}
 
 -------------------------------------
 
