@@ -7,7 +7,7 @@ class ImpLexer(RegexLexer):
     filenames = ['*.imp']
 
     tokens = {
-        'main stuff': [
+        'main': [
             (r'\s+', Text),
             (r'\b(local|case|of|while|is|null)\b', Keyword),
             (r'(\->|:=|\+\+|<\+|\-)', Operator),
@@ -30,7 +30,7 @@ class ImpLexer(RegexLexer):
             (r'\}', Punctuation, '#pop'),
         ],
         'function' : [
-            include('main stuff'),
+            include('main'),
             (r'\}', Punctuation, '#pop'),
         ],
         'parameters' : [
@@ -55,7 +55,7 @@ class ImpLexer(RegexLexer):
         ],
         'root': [
             include('function_def'),
-            include('main stuff'),
+            include('main'),
         ],
     }
 
