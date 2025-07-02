@@ -1,6 +1,7 @@
 {-# OPTIONS_GHC -fno-warn-tabs #-}
+{- HLINT ignore "Use camelCase" -}
 
-module TrabajoFinal where 
+module Solucion where 
 
 import Data.List
 
@@ -62,15 +63,15 @@ verifyBenefitsB :: Benefit -> SolB -> Bool
 verifyBenefitsB b ps = let benefits = map (\(_, _, b) -> b) ps in
   sum benefits >= b
 
-getGroupIndex :: [G] -> Name -> Int
-getGroupIndex [] name = -1
-getGroupIndex (g:gs) name 
-  | elem name g = 0
-  | otherwise = getGroupIndex gs name + 1
+getGroupIndex :: [G] -> Name -> Int -> Int
+getGroupIndex [] name acc = -1
+getGroupIndex (g:gs) name acc 
+  | elem name g = acc
+  | otherwise = getGroupIndex gs name (acc + 1)
 
 verifyGroupB :: [G] -> SolB -> Bool
 verifyGroupB gs ps = 
-  let groups = map (\(name, _, _) -> getGroupIndex gs name) ps in
+  let groups = map (\(name, _, _) -> getGroupIndex gs name 0) ps in
   let firstGroup = groups !! 1 in
   all (firstGroup ==) groups
 
@@ -104,7 +105,7 @@ getVars ((t1, t2, t3):ts) =
   addTermToSet t1 $ addTermToSet t2 $ addTermToSet t3 $ getVars ts
 
 getPossibleSolutionsA :: [Var] -> [SolA] 
-getPossibleSolutionsA [] = []
+getPossibleSolutionsA [] = [[]]
 getPossibleSolutionsA (v:vs) = 
   let vsSolutions = getPossibleSolutionsA vs in 
   map ((v, False):) vsSolutions ++ map ((v, True):) vsSolutions
@@ -120,10 +121,10 @@ solveA dom =
 ----------------- B -----------------
 
 getPossibleSolutionsB :: [P] -> [SolB]
-getPossibleSolutionsB [] = [] 
+getPossibleSolutionsB [] = [[]] 
 getPossibleSolutionsB (p:ps) = 
   let psSolutions = getPossibleSolutionsB ps in 
-  map (p:) psSolutions ++ psSolutions
+  map (p:) psSolutions ++ psSolutions 
     
 solveB :: DomB -> SolB
 solveB dom@(ps, gs, cost, benefit) = 

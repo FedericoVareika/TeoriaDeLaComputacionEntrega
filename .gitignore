@@ -10,3 +10,5 @@
 pygments*
 */_minted*
 */__pycache__
+build
+test.html
